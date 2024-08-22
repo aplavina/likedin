@@ -1,0 +1,24 @@
+server:
+  port: 9090
+
+spring:
+  devtools:
+    livereload:
+      port: 35730
+  thymeleaf:
+        cache : false
+  security:
+    oauth2:
+      client:
+        registration:
+          likedin-browser-client:
+            provider: likedin
+            client-id: likedin-browser-client
+            client-secret: "secret"
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:9090/login/oauth2/code/likedin-browser-client"
+            scope: testScope1,testScope2,openid
+            
+        provider:
+          likedin:
+            issuer-uri: http://localhost:9000
