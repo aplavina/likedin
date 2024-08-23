@@ -1,5 +1,6 @@
 package likedin;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -22,8 +23,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
   @Id private String id = UUID.randomUUID().toString();
 
-  private final String username;
+  @Column(name = "email", unique = true, nullable = false)
+  private final String email;
+
+  @Column(name = "password", nullable = false)
   private final String password;
+
+  @Column(name = "name", nullable = false)
+  private final String name;
+
+  @Column(name = "surname", nullable = false)
+  private final String surname;
+
+  @Column(name = "role", nullable = false)
   private final String role;
 
   @Override
@@ -38,6 +50,6 @@ public class User implements UserDetails {
 
   @Override
   public String getUsername() {
-    return username;
+    return email;
   }
 }
