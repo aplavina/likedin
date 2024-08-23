@@ -17,8 +17,8 @@ public class AuthServerApplication {
   @Bean
   public ApplicationRunner dataLoader(UserRepository repo, PasswordEncoder encoder) {
     return args -> {
-      repo.save(new User("user1@mail.com", encoder.encode("1234"), "ROLE_USER"));
-      repo.save(new User("user2@mail.com", encoder.encode("1234"), "ROLE_USER"));
+      repo.save(new User("user1@mail.com", encoder.encode("1234"), "John", "Doe", "ROLE_USER"));
+      repo.save(new User("user2@mail.com", encoder.encode("1234"), "Ivan", "Ivanov", "ROLE_USER"));
     };
   }
 }

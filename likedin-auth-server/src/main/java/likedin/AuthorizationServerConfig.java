@@ -14,6 +14,7 @@ import likedin.data.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
@@ -31,7 +32,6 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -41,34 +41,19 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 public class AuthorizationServerConfig {
 
   @Bean
-  @Order(1)
+  @Order(Ordered.HIGHEST_PRECEDENCE)
   public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
       throws Exception {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
     http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
     http.exceptionHandling(
-            (exceptions) ->
+            exceptions ->
                 exceptions.defaultAuthenticationEntryPointFor(
                     new LoginUrlAuthenticationEntryPoint("/login"),
                     new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
         .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
 
     return http.build();
-  }
-
-  @Bean
-  @Order(2)
-  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
-        .formLogin(
-            formLogin -> formLogin.loginPage("/login").permitAll().loginProcessingUrl("/login"));
-
-    return http.build();
-  }
-
-  @Bean
-  public UserDetailsService customUserDetailsService(UserRepository userRepo) {
-    return username -> userRepo.findByUsername(username);
   }
 
   @Bean
@@ -84,15 +69,9 @@ public class AuthorizationServerConfig {
             .scope("testScope1")
             .scope("testScope2")
             .scope(OidcScopes.OPENID)
-            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
             .build();
 
     return new InMemoryRegisteredClientRepository(registeredClient);
-  }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
   }
 
   @Bean
