@@ -16,7 +16,7 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
             authorize ->
                 authorize.requestMatchers("/api/posts").hasAnyAuthority("SCOPE_testScope1"))
-        .oauth2ResourceServer((oauth2) -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())));
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())));
 
     return http.build();
   }
