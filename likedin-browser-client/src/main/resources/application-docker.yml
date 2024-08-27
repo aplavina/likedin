@@ -1,0 +1,12 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          likedin-browser-client:
+            redirect-uri: http://localhost:9090/login/oauth2/code/likedin-browser-client         
+        provider:
+          likedin:
+            issuer-uri: http://auth-server:9000
+            authorization-uri: http://127.0.0.1:9000/oauth2/authorize
+posts-url: http://posts:7000/api/posts

@@ -1,5 +1,6 @@
 package likedin.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,8 +22,11 @@ public class SecurityConfig {
     return http.build();
   }
 
+  @Value("${jwk-set-uri}")
+  private String jwkSetUri;
+
   @Bean
   public JwtDecoder jwtDecoder() {
-    return NimbusJwtDecoder.withJwkSetUri("http://localhost:9000/oauth2/jwks").build();
+    return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
   }
 }

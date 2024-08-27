@@ -3,6 +3,7 @@ package likedin.web;
 import java.io.IOException;
 import java.util.Arrays;
 import likedin.Post;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -31,8 +32,11 @@ public class RestPostService implements PostService {
     };
   }
 
+  @Value("${posts-url}")
+  private String postsUrl;
+
   @Override
   public Iterable<Post> findRecent() {
-    return Arrays.asList(restTemplate.getForObject("http://localhost:7000/api/posts", Post[].class));
+    return Arrays.asList(restTemplate.getForObject(postsUrl, Post[].class));
   }
 }
