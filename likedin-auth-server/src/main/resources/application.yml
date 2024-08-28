@@ -3,3 +3,6 @@ server:
 logging:
   level:
     org.springframework.security: trace
+    
+    
+browser-client-redirect: http://127.0.0.1:9090/login/oauth2/code/likedin-browser-client

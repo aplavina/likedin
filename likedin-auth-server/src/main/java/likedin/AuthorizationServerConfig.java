@@ -10,8 +10,8 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
-import likedin.data.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -19,8 +19,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -56,8 +54,12 @@ public class AuthorizationServerConfig {
     return http.build();
   }
 
+  @Value("${browser-client-redirect}")
+  private String browserClientRedirect;
+
   @Bean
   public RegisteredClientRepository registeredClientRepository(PasswordEncoder encoder) {
+    log.info("BROWSER CLIENT REDIRECT IS SET TO: " + browserClientRedirect);
     RegisteredClient registeredClient =
         RegisteredClient.withId(UUID.randomUUID().toString())
             .clientId("likedin-browser-client")
@@ -65,7 +67,7 @@ public class AuthorizationServerConfig {
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-            .redirectUri("http://127.0.0.1:9090/login/oauth2/code/likedin-browser-client")
+            .redirectUri(browserClientRedirect)
             .scope("testScope1")
             .scope("testScope2")
             .scope(OidcScopes.OPENID)

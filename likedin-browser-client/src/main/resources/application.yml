@@ -1,5 +1,9 @@
 server:
   port: 9090
+  
+logging:
+  level:
+    org.springframework.security: trace
 
 spring:
   devtools:
@@ -14,11 +18,13 @@ spring:
           likedin-browser-client:
             provider: likedin
             client-id: likedin-browser-client
-            client-secret: "secret"
+            client-secret: secret
             authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:9090/login/oauth2/code/likedin-browser-client"
+            redirect-uri: http://127.0.0.1:9090/login/oauth2/code/likedin-browser-client
             scope: testScope1,testScope2,openid
             
         provider:
           likedin:
             issuer-uri: http://localhost:9000
+            
+posts-url: http://localhost:7000/api/posts
